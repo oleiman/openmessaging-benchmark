@@ -72,8 +72,14 @@ public class WorkloadGenerator implements AutoCloseable {
         List<String> topics = worker.createOrValidateTopics(ti);
         log.info("{} {} topics in {} ms", ti.isExistingTopics() ? "Validated" : "Created", topics.size(), timer.elapsedMillis());
 
-        createConsumers(topics);
-        createProducers(topics);
+        if (workload.seperateReaderWriteTopics) {
+          int mid = topics.size() / 2;
+          createProducers(topics.subList(0, mid));
+          createConsumers(topics.subList(mid, topics.size()));
+        } else {
+          createConsumers(topics);
+          createProducers(topics);
+        }
 
         ensureTopicsAreReady();
 
