@@ -79,7 +79,7 @@ public class TopicsInfo {
             consume.addAll(w.existingConsumeTopicList);
             List<String> produce = new ArrayList<>(w.existingTopicList);
             produce.addAll(w.existingProduceTopicList);
-            return new TopicsInfo(consume, produce);
+            return new TopicsInfo(produce, consume);
         }
     }
 }
