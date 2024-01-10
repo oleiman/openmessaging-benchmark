@@ -1,0 +1,4 @@
+name: noop
+input-topic: "ingress"
+output-topic: "noop-out"
+language: tinygo-no-goroutines

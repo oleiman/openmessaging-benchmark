@@ -1,0 +1,4 @@
+name: avro
+input-topic: "ingress"
+output-topic: "avro-out"
+language: tinygo-no-goroutines

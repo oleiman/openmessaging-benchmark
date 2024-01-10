@@ -1,0 +1,4 @@
+name: drop
+input-topic: "ingress"
+output-topic: "drop-out"
+language: tinygo-no-goroutines
