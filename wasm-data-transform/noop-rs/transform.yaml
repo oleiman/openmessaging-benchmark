@@ -1,4 +1,4 @@
 name: noop-rs
-input-topic: ""
-output-topic: ""
+input-topic: "ingress"
+output-topic: "noop-out"
 language: rust
