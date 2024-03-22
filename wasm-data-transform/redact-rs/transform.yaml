@@ -1,0 +1,4 @@
+name: redact
+input-topic: ingress
+output-topic: redact-out
+language: rust
