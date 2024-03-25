@@ -4,17 +4,22 @@ use anyhow::Result;
 use redpanda_transform_sdk::*;
 use sha2::{Digest, Sha256};
 
+/// SAFETY: The runtime environment must be single-threaded WASM.
+#[cfg(target_family = "wasm")]
+#[global_allocator]
+static ALLOCATOR: talc::TalckWasm = unsafe { talc::TalckWasm::new_global() };
+
 fn main() {
     on_record_written(my_transform);
 }
 
 fn my_transform(event: WriteEvent, writer: &mut RecordWriter) -> Result<()> {
-    let value = match event.record.value() {
-        Some(v) => v,
+    let value = event.record.value().unwrap_or_default();
+    let mut interop: avro::Interop = match serde_json::from_slice(value) {
+        Ok(i) => i,
         // OMB sends some dummy messages sometimes, so just skip those
-        None => return Ok(()),
+        Err(_) => return Ok(()),
     };
-    let mut interop: avro::Interop = serde_json::from_slice(value)?;
     redact(&mut interop);
     let redacted = serde_json::to_vec(&interop)?;
     writer.write(BorrowedRecord::new_with_headers(
