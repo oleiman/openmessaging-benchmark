@@ -2,13 +2,13 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Foo {
     pub label: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub enum Union {
     Boolean(bool),
@@ -16,21 +16,21 @@ pub enum Union {
     Array(Vec<String>),
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub enum Enum {
     A,
     B,
     C,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Node {
     pub label: String,
     pub children: Vec<Node>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Interop {
     pub int_field: i32,
@@ -40,7 +40,7 @@ pub struct Interop {
     pub float_field: f32,
     pub double_field: f64,
     pub bytes_field: String,
-    pub null_field: Option<()>,
+    pub null_field: Option<serde_json::value::Value>,
     pub array_field: Vec<f64>,
     pub map_field: HashMap<String, Foo>,
     pub union_field: Union,

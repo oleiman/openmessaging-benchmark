@@ -61,3 +61,17 @@ fn f64_hash(v: f64) -> f64 {
     let (int_bytes, _) = hash.split_at(std::mem::size_of::<f64>());
     f64::from_be_bytes(int_bytes.try_into().unwrap())
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::avro;
+    use anyhow::Result;
+    use serde_json;
+    #[test]
+    fn round_trip_interop() -> Result<()> {
+        let value = std::fs::read_to_string("../../payload/payload-1Kb.json")?;
+        let interop: avro::Interop = serde_json::from_slice(value.as_bytes())?;
+        println!("{:?}", interop);
+        Ok(())
+    }
+}
