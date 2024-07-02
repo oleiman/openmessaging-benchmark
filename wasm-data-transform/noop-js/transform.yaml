@@ -1,0 +1,4 @@
+name: noop-js
+input-topic: ""
+output-topics: []
+language: javascript
