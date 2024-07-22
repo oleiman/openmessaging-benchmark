@@ -1,0 +1,4 @@
+name: redact-js
+input-topic: ""
+output-topics: []
+language: typescript
