@@ -1,57 +1,57 @@
 import { onRecordWritten, OnRecordWrittenEvent, RecordWriter, Record } from "@redpanda-data/transform-sdk";
 import { createHash } from "crypto";
-import { parse } from "avsc/lib/index.js"
+// import { parse } from "avsc/lib/index.js"
 import { Buffer } from "buffer"
 
 
 // maybe not needed
-const schema = {
-    "type": "record",
-    "name": "Interop",
-    "namespace": "org.apache.avro",
-    "fields": [
-        { "name": "intField", "type": "int" },
-        { "name": "longField", "type": "long" },
-        { "name": "stringField", "type": "string" },
-        { "name": "boolField", "type": "boolean" },
-        { "name": "floatField", "type": "float" },
-        { "name": "doubleField", "type": "double" },
-        { "name": "bytesField", "type": "bytes" },
-        { "name": "nullField", "type": "null" },
-        { "name": "arrayField", "type": { "type": "array", "items": "double" } },
-        {
-            "name": "mapField", "type":
-            {
-                "type": "map", "values":
-                {
-                    "type": "record", "name": "Foo",
-                    "fields": [{ "name": "label", "type": "string" }]
-                }
-            }
-        },
-        {
-            "name": "unionField", "type":
-                ["boolean", "double", { "type": "array", "items": "bytes" }]
-        },
-        {
-            "name": "enumField", "type":
-                { "type": "enum", "name": "Kind", "symbols": ["A", "B", "C"] }
-        },
-        {
-            "name": "fixedField", "type":
-                { "type": "fixed", "name": "MD5", "size": 16 }
-        },
-        {
-            "name": "recordField", "type":
-            {
-                "type": "record", "name": "Node",
-                "fields": [
-                    { "name": "label", "type": "string" },
-                    { "name": "children", "type": { "type": "array", "items": "Node" } }]
-            }
-        }
-    ]
-};
+// const schema = {
+//     "type": "record",
+//     "name": "Interop",
+//     "namespace": "org.apache.avro",
+//     "fields": [
+//         { "name": "intField", "type": "int" },
+//         { "name": "longField", "type": "long" },
+//         { "name": "stringField", "type": "string" },
+//         { "name": "boolField", "type": "boolean" },
+//         { "name": "floatField", "type": "float" },
+//         { "name": "doubleField", "type": "double" },
+//         { "name": "bytesField", "type": "bytes" },
+//         { "name": "nullField", "type": "null" },
+//         { "name": "arrayField", "type": { "type": "array", "items": "double" } },
+//         {
+//             "name": "mapField", "type":
+//             {
+//                 "type": "map", "values":
+//                 {
+//                     "type": "record", "name": "Foo",
+//                     "fields": [{ "name": "label", "type": "string" }]
+//                 }
+//             }
+//         },
+//         {
+//             "name": "unionField", "type":
+//                 ["boolean", "double", { "type": "array", "items": "bytes" }]
+//         },
+//         {
+//             "name": "enumField", "type":
+//                 { "type": "enum", "name": "Kind", "symbols": ["A", "B", "C"] }
+//         },
+//         {
+//             "name": "fixedField", "type":
+//                 { "type": "fixed", "name": "MD5", "size": 16 }
+//         },
+//         {
+//             "name": "recordField", "type":
+//             {
+//                 "type": "record", "name": "Node",
+//                 "fields": [
+//                     { "name": "label", "type": "string" },
+//                     { "name": "children", "type": { "type": "array", "items": "Node" } }]
+//             }
+//         }
+//     ]
+// };
 
 
 function i32Hash(i32) {
@@ -96,15 +96,15 @@ function redact(o) {
     return o;
 }
 
-const typ = parse(schema);
+// const typ = parse(schema);
 
 onRecordWritten((event: OnRecordWrittenEvent, writer: RecordWriter) => {
-    var buf = new Buffer(event.record.value.array());
-    var val = typ.fromJSON(buf)
+    var val = JSON.parse(event.record.value.text());
     val = redact(val);
+    const b = JSON.stringify(val);
     writer.write({
         key: event.record.key,
-        value: typ.toJSON(val),
+        value: b,
         headers: event.record.headers,
     });
 });
