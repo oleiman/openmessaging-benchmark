@@ -88,11 +88,11 @@ function f64Hash(f64) {
 }
 
 function redact(o) {
-    o.stringField = "";
+    // o.stringField = "";
     o.intField = i32Hash(o.intField);
-    o.longField = i64Hash(o.longField);
-    o.floatField = f32Hash(o.floatField);
-    o.doubleField = f64Hash(o.doubleField);
+    // o.longField = i64Hash(o.longField);
+    // o.floatField = f32Hash(o.floatField);
+    // o.doubleField = f64Hash(o.doubleField);
     return o;
 }
 
@@ -106,7 +106,7 @@ onRecordWritten((event: OnRecordWrittenEvent, writer: RecordWriter) => {
         console.warn("error reading json", error);
         return;
     }
-    // val = redact(val);
+    val = redact(val);
     const b = JSON.stringify(val);
     writer.write({
         key: event.record.key,
