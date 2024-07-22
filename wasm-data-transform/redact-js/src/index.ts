@@ -53,14 +53,24 @@ import { Buffer } from "buffer"
 //     ]
 // };
 
+let buffer = new ArrayBuffer(16);
+let dv = new DataView(buffer);
 
 function i32Hash(i32) {
     var hash = createHash('sha256');
-    const buffer = new ArrayBuffer(4);
-    new DataView(buffer).setInt32(0, i32);
+    dv.setInt32(0, i32);
     hash.update(buffer);
     return new DataView(hash.digest().buffer).getInt32(0);
 }
+
+
+// function i32Hash(i32) {
+//     var hash = createHash('sha256');
+//     const buffer = new ArrayBuffer(4);
+//     new DataView(buffer).setInt32(0, i32);
+//     hash.update(buffer);
+//     return new DataView(hash.digest().buffer).getInt32(0);
+// }
 
 function i64Hash(i64) {
     var hash = createHash('sha256');
