@@ -99,7 +99,9 @@ function redact(o) {
 // const typ = parse(schema);
 
 onRecordWritten((event: OnRecordWrittenEvent, writer: RecordWriter) => {
-    var val = JSON.parse(event.record.value.text());
+    const txt = event.record.value.text();
+    console.warn(txt);
+    var val = JSON.parse(txt);
     val = redact(val);
     const b = JSON.stringify(val);
     writer.write({
