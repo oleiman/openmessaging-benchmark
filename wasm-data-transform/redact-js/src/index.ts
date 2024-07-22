@@ -106,7 +106,7 @@ onRecordWritten((event: OnRecordWrittenEvent, writer: RecordWriter) => {
         console.warn("error reading json", error);
         return;
     }
-    val = redact(val);
+    // val = redact(val);
     const b = JSON.stringify(val);
     writer.write({
         key: event.record.key,
