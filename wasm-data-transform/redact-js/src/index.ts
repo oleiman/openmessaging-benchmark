@@ -1,4 +1,4 @@
-import { onRecordWritten, OnRecordWrittenEvent, RecordWriter, Record } from "@redpanda-data/transform-sdk";
+import { onRecordWritten, OnRecordWrittenEvent, RecordWriter, } from "@redpanda-data/transform-sdk";
 import { createHash } from "crypto";
 // import { parse } from "avsc/lib/index.js"
 import { Buffer } from "buffer"
@@ -103,24 +103,22 @@ function redact(o) {
     // o.longField = i64Hash(o.longField);
     // o.floatField = f32Hash(o.floatField);
     // o.doubleField = f64Hash(o.doubleField);
-    return o;
 }
 
 // const typ = parse(schema);
 
 onRecordWritten((event: OnRecordWrittenEvent, writer: RecordWriter) => {
-    var val;
+    let val;
     try {
-        val = JSON.parse(event.record.value.text());
+        val = JSON.parse(event.record?.value.text());
+        redact(val);
     } catch (error) {
         console.warn("error reading json", error);
         return;
     }
-    val = redact(val);
-    const b = JSON.stringify(val);
     writer.write({
         key: event.record.key,
-        value: b,
+        value: JSON.stringify(val),
         headers: event.record.headers,
     });
 });

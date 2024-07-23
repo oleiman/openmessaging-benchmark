@@ -8,6 +8,7 @@ await esbuild.build({
   external: [
     // This package is provided by the Redpanda JavaScript runtime.
     "@redpanda-data/transform-sdk",
+    "@redpanda-data/transform-sdk-sr",
   ],
   target: "es2022",
   platform: "neutral", // We're running in Wasm
