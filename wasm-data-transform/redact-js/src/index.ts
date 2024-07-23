@@ -1,5 +1,6 @@
 import { onRecordWritten, OnRecordWrittenEvent, RecordWriter, } from "@redpanda-data/transform-sdk";
-import { createHash } from "crypto";
+// import { createHash } from "crypto";
+import { sha256 } from "js-sha256/src/sha256.js"
 // import { parse } from "avsc/lib/index.js"
 import { Buffer } from "buffer"
 
@@ -56,11 +57,10 @@ import { Buffer } from "buffer"
 let buffer = new ArrayBuffer(16);
 let dv = new DataView(buffer);
 
-function i32Hash(i32) {
-    var hash = createHash('sha256');
+function i32Hash(i32: number) {
     dv.setInt32(0, i32);
-    hash.update(buffer);
-    return new DataView(hash.digest().buffer).getInt32(0);
+    var h = sha256.arrayBuffer(buffer)
+    return new DataView(h).getInt32(0);
 }
 
 
@@ -72,30 +72,30 @@ function i32Hash(i32) {
 //     return new DataView(hash.digest().buffer).getInt32(0);
 // }
 
-function i64Hash(i64) {
-    var hash = createHash('sha256');
-    // TODO(oren): why 16?
-    const buffer = new ArrayBuffer(16);
-    new DataView(buffer).setBigInt64(0, BigInt(i64));
-    hash.update(buffer);
-    return Number(new DataView(hash.digest().buffer).getBigInt64(0));
-}
+// function i64Hash(i64) {
+//     var hash = createHash('sha256');
+//     // TODO(oren): why 16?
+//     const buffer = new ArrayBuffer(16);
+//     new DataView(buffer).setBigInt64(0, BigInt(i64));
+//     hash.update(buffer);
+//     return Number(new DataView(hash.digest().buffer).getBigInt64(0));
+// }
 
-function f32Hash(f32) {
-    var hash = createHash('sha256');
-    const buffer = new ArrayBuffer(16);
-    new DataView(buffer).setFloat32(0, f32);
-    hash.update(buffer);
-    return new DataView(hash.digest().buffer).getFloat32(0);
-}
+// function f32Hash(f32) {
+//     var hash = createHash('sha256');
+//     const buffer = new ArrayBuffer(16);
+//     new DataView(buffer).setFloat32(0, f32);
+//     hash.update(buffer);
+//     return new DataView(hash.digest().buffer).getFloat32(0);
+// }
 
-function f64Hash(f64) {
-    var hash = createHash('sha256');
-    const buffer = new ArrayBuffer(16);
-    new DataView(buffer).setFloat64(0, f64);
-    hash.update(buffer);
-    return new DataView(hash.digest().buffer).getFloat64(0);
-}
+// function f64Hash(f64) {
+//     var hash = createHash('sha256');
+//     const buffer = new ArrayBuffer(16);
+//     new DataView(buffer).setFloat64(0, f64);
+//     hash.update(buffer);
+//     return new DataView(hash.digest().buffer).getFloat64(0);
+// }
 
 function redact(o) {
     // o.stringField = "";
