@@ -57,10 +57,11 @@ import { Buffer } from "buffer"
 
 
 function i32Hash(i32: number) {
-    var buffer = new ArrayBuffer(64);
-    new DataView(buffer).setInt32(1, i32);
-    var h = sha256.arrayBuffer(buffer)
-    return new DataView(h).getInt32(1);
+    const buffer = new ArrayBuffer(64);
+    const dv = new DataView(buffer);
+    dv.setInt32(1, i32);
+    // var h = sha256.arrayBuffer(buffer)
+    return dv.getInt32(1);
 }
 
 
