@@ -54,13 +54,13 @@ import { Buffer } from "buffer"
 //     ]
 // };
 
-let buffer = new ArrayBuffer(16);
-let dv = new DataView(buffer);
+
 
 function i32Hash(i32: number) {
-    dv.setInt32(0, i32);
+    var buffer = new ArrayBuffer(64);
+    new DataView(buffer).setInt32(1, i32);
     var h = sha256.arrayBuffer(buffer)
-    return new DataView(h).getInt32(0);
+    return new DataView(h).getInt32(1);
 }
 
 
