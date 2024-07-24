@@ -1,16 +1,16 @@
 package main
 
 import (
-	"github.com/redpanda-data/redpanda/src/transform-sdk/go/transform"
-	"redact/avro"
 	"crypto/sha256"
-	"math"
 	"encoding/binary"
+	"github.com/redpanda-data/redpanda/src/transform-sdk/go/transform"
+	"math"
+	"redact/avro"
 )
 
 func main() {
-        // Register your transform function. 
-        // This is a good place to perform other setup too.
+	// Register your transform function.
+	// This is a good place to perform other setup too.
 	transform.OnRecordWritten(doTransform)
 }
 
@@ -24,7 +24,7 @@ func doTransform(e transform.WriteEvent, w transform.RecordWriter) error {
 		// OMB sends some dummy messages sometimes to test things, so just copy it out verbatium
 		return nil
 	}
-	redact(&i)
+	// redact(&i)
 	b, err := i.MarshalJSON()
 	if err != nil {
 		return err
