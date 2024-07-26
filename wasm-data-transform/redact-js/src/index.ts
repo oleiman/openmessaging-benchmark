@@ -1,6 +1,6 @@
 import { onRecordWritten, OnRecordWrittenEvent, RecordWriter, } from "@redpanda-data/transform-sdk";
-// import { createHash } from "crypto";
-import { sha256 } from "js-sha256/src/sha256.js"
+import { createHash } from "crypto";
+// import { sha256 } from "js-sha256/src/sha256.js"
 // import { parse } from "avsc/lib/index.js"
 import { Buffer } from "buffer"
 
@@ -56,23 +56,23 @@ import { Buffer } from "buffer"
 
 
 
-function i32Hash(i32: number) {
-    let b = new ArrayBuffer(64);
-    let view = new Uint32Array(b);
-    view[0] = i32;
-    let h = sha256.arrayBuffer(b);
-    view = new Uint32Array(h);
-    return view[0];
-}
-
-
-// function i32Hash(i32) {
-//     var hash = createHash('sha256');
-//     const buffer = new ArrayBuffer(4);
-//     new DataView(buffer).setInt32(0, i32);
-//     hash.update(buffer);
-//     return new DataView(hash.digest().buffer).getInt32(0);
+// function i32Hash(i32: number) {
+//     let b = new ArrayBuffer(64);
+//     let view = new Uint32Array(b);
+//     view[0] = i32;
+//     let h = sha256.arrayBuffer(b);
+//     view = new Uint32Array(h);
+//     return view[0];
 // }
+
+
+function i32Hash(i32) {
+    var hash = createHash('sha256');
+    const buffer = new ArrayBuffer(4);
+    new DataView(buffer).setInt32(0, i32);
+    hash.update(buffer);
+    return new DataView(hash.digest().buffer).getInt32(0);
+}
 
 // function i64Hash(i64) {
 //     var hash = createHash('sha256');
@@ -110,17 +110,22 @@ function redact(o) {
 // const typ = parse(schema);
 
 onRecordWritten((event: OnRecordWrittenEvent, writer: RecordWriter) => {
-    let val;
     try {
-        val = JSON.parse(event.record?.value.text());
-        redact(val);
+        if (event.record.value == null) {
+            console.warn("null record");
+            writer.write(event.record);
+        } else {
+            var val = JSON.parse(event.record.value.text());
+            redact(val);
+            writer.write(event.record);
+            // writer.write({
+            //     key: event.record.key,
+            //     value: JSON.stringify(val),
+            //     headers: event.record.headers,
+            // });
+        }
     } catch (error) {
         console.warn("error reading json", error);
         return;
     }
-    writer.write({
-        key: event.record.key,
-        value: JSON.stringify(val),
-        headers: event.record.headers,
-    });
 });

@@ -24,7 +24,7 @@ await esbuild.build({
       },
       polyfills: {
         // Any NodeJS APIs that need to polyfilled can be added here.
-        // crypto: true,
+        crypto: true,
       },
     }),
   ],
