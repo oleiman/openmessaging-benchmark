@@ -24,7 +24,7 @@ func doTransform(e transform.WriteEvent, w transform.RecordWriter) error {
 		// OMB sends some dummy messages sometimes to test things, so just copy it out verbatium
 		return nil
 	}
-	// redact(&i)
+	redact(&i)
 	b, err := i.MarshalJSON()
 	if err != nil {
 		return err
